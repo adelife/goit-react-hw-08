@@ -1,38 +1,44 @@
-// import PropTypes from "prop-types"
-import Contact from '../Contact/Contact'
-import css from './ContactList.module.css'
+import Contact from "../Contact/Contact";
+import css from "./ContactList.module.css";
 import { useSelector } from "react-redux";
-import { selectContacts, selectNameFilter } from "../../redux/selectors";
+import {
+  selectIsError,
+  selectIsLoading,
+  selectVisibleContacts,
+} from "../../redux/contacts/selectors";
+import Modal from "../Modal/Modal";
+import { useState } from "react";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
-const isVisibleContacts = (contacts, filter) => {
-  return contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
+const ContactList = () => {
+  const visibleContacts = useSelector(selectVisibleContacts);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [contact, setContact] = useState({});
+  const isLoading = useSelector(selectIsLoading);
+  const isError = useSelector(selectIsError);
+
+  const openModal = (contactData) => {
+    setContact(contactData);
+    setIsOpenModal(true);
+  };
+  return (
+    <>
+      {isLoading && <Loader />}
+      {isError && <ErrorMessage />}
+      <ul className={css.list}>
+        {visibleContacts &&
+          visibleContacts.map((contact) => (
+            <Contact openModal={openModal} key={contact.id} contact={contact} />
+          ))}
+
+        {visibleContacts && visibleContacts.length === 0 && (
+          <p>List is empty</p>
+        )}
+      </ul>
+      {isOpenModal && <Modal onClick={setIsOpenModal} contact={contact} />}
+    </>
   );
 };
 
-const ContactList = () => {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectNameFilter);
-  const visibleContacts = isVisibleContacts(contacts, filter);
-    return (
-      <ul className={css.list}>
-        {visibleContacts.map((contact) => (
-          <li className={css.item} key={contact.id}>
-            <Contact {...contact} />
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  // ContactList.propTypes = {
-  //   contacts: PropTypes.arrayOf(
-  //     PropTypes.shape({
-  //       id: PropTypes.number.isRequired,
-  //       name: PropTypes.string.isRequired,
-  //       number: PropTypes.string.isRequired,
-  //       onDeleteContact: PropTypes.func.isRequired,
-  //     })
-  //   ).isRequired,
-  // };
-  export default ContactList;
+export default ContactList;

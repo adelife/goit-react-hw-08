@@ -1,45 +1,49 @@
-import { FaPhone } from 'react-icons/fa6';
-import { IoPersonSharp } from 'react-icons/io5';
-import css from './Contact.module.css';
-// import PropTypes from "prop-types";
+import { MdPerson, MdPhone } from "react-icons/md";
 import { useDispatch } from "react-redux";
+import css from "./Contact.module.css";
+import PropTypes from "prop-types";
+import { apiDeleteUserContact } from "../../redux/contacts/operations";
 
-import { deleteContact } from "../../redux/contactsOps";
-
-const Contact = ({ id, name, number}) => {
+const Contact = ({ contact, openModal }) => {
   const dispatch = useDispatch();
+  const handleDelete = () => dispatch(apiDeleteUserContact(contact.id));
 
-  const handleDelete = () => {
-    dispatch(deleteContact(id)); 
-  };
-
-    return (
-      <div className={css.container}>
+  return (
+    <li className={css.container}>
       <div className={css.contact}>
-        <p className={css.text}>
-          <span className={css.span}>
-            <IoPersonSharp />
-          </span>
-          {name}
-        </p>
-        <p className={css.text}>
-          <span className={css.span}>
-            <FaPhone  />
-          </span>
-          {number}
-        </p>
+        <div className={css.text}>
+          <MdPerson /> {contact.name}
+        </div>
+        <div>
+          <MdPhone /> {contact.number}
+        </div>
       </div>
-      <button className={css.button} type='button' onClick={() => handleDelete(id)}>
-        Delete
-      </button>
-    </div>
+
+      <div className={css.btnWrapper}>
+        <button
+          className={css.btn}
+          type='button'
+          onClick={() => {
+            openModal(contact);
+          }}
+        >
+          Edit
+        </button>
+        <button className={css.button} type='button' onClick={handleDelete}>
+          Delete
+        </button>
+      </div>
+    </li>
   );
 };
 
-  // Contact.propTypes = {
-  //     id : PropTypes.number.isRequired,
-  //     name : PropTypes.string.isRequired,
-  //     number : PropTypes.string.isRequired,
-  // };
-  
-  export default Contact;
+Contact.propTypes = {
+  contact: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    number: PropTypes.string.isRequired,
+  }).isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+
+export default Contact;
