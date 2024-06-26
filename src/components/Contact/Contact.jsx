@@ -1,7 +1,7 @@
 import { MdPerson, MdPhone } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import css from "./Contact.module.css";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { apiDeleteUserContact } from "../../redux/contacts/operations";
 
 const Contact = ({ contact, openModal }) => {
@@ -37,13 +37,13 @@ const Contact = ({ contact, openModal }) => {
   );
 };
 
-Contact.propTypes = {
-  contact: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
-  }).isRequired,
-  openModal: PropTypes.func.isRequired,
-};
+// Contact.propTypes = {
+//   contact: PropTypes.shape({
+//     id: PropTypes.string.isRequired,
+//     name: PropTypes.string.isRequired,
+//     number: PropTypes.string.isRequired,
+//   }).isRequired,
+//   openModal: PropTypes.func.isRequired,
+// };
 
 export default Contact;
